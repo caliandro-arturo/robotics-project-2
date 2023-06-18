@@ -1,0 +1,9 @@
+<launch>
+  <node pkg="second_project" type="tf_publisher" name="tf_publisher"/>
+  <param name="use_sim_time" value="true"/>
+  
+ <!--  rviz  -->
+ <node name="rviz" pkg="rviz" type="rviz" args="-d $(find second_project)/config_mapping.rviz"/>
+
+
+</launch>
