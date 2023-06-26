@@ -141,7 +141,7 @@ foreach(node ${NODES})
   # Declare a C++ executable
   # With catkin_make all packages are built within a single CMake context
   # The recommended prefix ensures that target names across packages don't collide
-  add_executable(${node} src/${node}_node.cpp)
+  add_executable(${node} src/${node}_node.cpp src/plan.cpp)
   target_link_libraries(${node} ${catkin_LIBRARIES})
 endforeach(node)
 
