@@ -65,6 +65,7 @@ int main(int argc, char* argv[])
         goal.target_pose.pose.position.x = doubleData[0];
         goal.target_pose.pose.position.y = doubleData[1];
         goal.target_pose.pose.orientation.z = sin(doubleData[2] / 2.0);
+        goal.target_pose.pose.orientation.w = cos(doubleData[2] / 2.0);
 
         mb.sendGoal(goal);
         mb.waitForResult();
