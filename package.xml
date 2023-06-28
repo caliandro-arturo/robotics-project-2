@@ -52,6 +52,9 @@
   <depend>roscpp</depend>
   <depend>nav_msgs</depend>
   <depend>tf</depend>
+  <depend>move_base_msgs</depend>
+  <depend>actionlib</depend>
+  <depend>global_planner</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
