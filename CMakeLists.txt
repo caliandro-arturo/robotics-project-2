@@ -138,6 +138,7 @@ set(NODES
   navigation
   tf_publisher
   plan
+  limits_finder
 )
 
 # Automation to add the executables
