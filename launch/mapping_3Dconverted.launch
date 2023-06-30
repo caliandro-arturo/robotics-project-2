@@ -1,0 +1,30 @@
+<launch>
+  <node pkg="second_project" type="tf_publisher" name="tf_publisher"/>
+  <param name="use_sim_time" value="true"/>
+
+  <!--  rviz  -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find second_project)/config_mapping.rviz"/>
+
+  <!--  slam_toolbox  -->
+  <node pkg="slam_toolbox" type="async_slam_toolbox_node" name="slam_toolbox" output="screen">
+    <rosparam command="load" file="$(find second_project)/cfg/slam_toolbox_mapping_3Dconverted.yaml" />
+  </node>
+
+  <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+        <remap from="cloud_in" to="velodyne_points"/>
+        <remap from="scan" to="scan3D"/>
+
+        <param name="target_frame" value="base_link"/>
+        <param name="transform_tolerance" value="0.01"/>
+        <param name="angle_increment" value="0.00139657375"/> <!--value="0.0013962631"-->
+        <param name="range_max" value="20.0"/>
+        <param name="min_height" value="0.0"/>
+        <param name="max_height" value="1.0"/>
+        <param name="scan_time" value="0.0"/>
+        <param name="range_min" value="0.15000000596046448"/>
+        <param name="range_max" value="101.0"/>
+        <param name="use_inf" value="true"/>
+        <param name="concurrency_level" value="1"/>
+    </node>
+
+</launch>
