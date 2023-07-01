@@ -1,22 +1,10 @@
 <launch>
-  <!-- Configurazione del planner locale -->
-  <node pkg="base_local_planner" type="base_local_planner_node" name="base_local_planner">
-    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" />
-    <rosparam command="load" file="$(find second_project)/cfg/base_local_planner.yaml" />
-  </node>
-
-  <!-- Configurazione del planner globale -->
-  <node pkg="global_planner" type="global_planner_node" name="global_planner">
-    <rosparam command="load" file="$(find second_project)/cfg/global_planner.yaml" />
-  </node>
-
-  <!-- Configurazione di AMCL -->
-  <node pkg="amcl" type="amcl" name="amcl">
-    <rosparam command="load" file="$(find second_project)/cfg/amcl.yaml" />
-  </node>
-
-  <!-- Configurazione di move_base -->
-  <node pkg="move_base" type="move_base" name="move_base">
-    <rosparam command="load" file="$(find second_project)/cfg/move_base.yaml" />
-  </node>
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find second_project)/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find second_project)/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find second_project)/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find second_project)/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find second_project)/base_local_planner_params.yaml" command="load" />
+        <rosparam file="$(find second_project)/global_planner_params.yaml" command="load" />
+    </node>
 </launch>

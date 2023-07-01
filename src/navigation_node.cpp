@@ -14,6 +14,7 @@
 
 #define CSV_PATH "waypoints.csv"
 
+
 int main(int argc, char* argv[])
 {
     ros::init(argc, argv, "navigation");
@@ -34,7 +35,7 @@ int main(int argc, char* argv[])
     }
 
     std::string line;
-    while (std::getline(file, line))
+    while (std::getline(file, line) && ros::ok())
     {
         std::istringstream iss(line);
         std::string current;
@@ -64,13 +65,21 @@ int main(int argc, char* argv[])
 
         goal.target_pose.pose.position.x = doubleData[0];
         goal.target_pose.pose.position.y = doubleData[1];
-        goal.target_pose.pose.orientation.z = sin(doubleData[2] / 2.0);
-        goal.target_pose.pose.orientation.w = cos(doubleData[2] / 2.0);
+        goal.target_pose.pose.orientation.z = doubleData[2];
 
         mb.sendGoal(goal);
         mb.waitForResult();
 
-        //ros spin once e ok all'interno del while
+        if (mb.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+        {
+            ROS_INFO("Goal reached");
+        }
+        else
+        {
+            ROS_WARN("Fail");
+        }
+
+        ros::spinOnce();
 
     }
 
