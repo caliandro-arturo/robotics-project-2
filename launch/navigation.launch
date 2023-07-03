@@ -1,4 +1,5 @@
 <launch>
+
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <rosparam file="$(find second_project)/costmap_common_params.yaml" command="load" ns="global_costmap" />
         <rosparam file="$(find second_project)/costmap_common_params.yaml" command="load" ns="local_costmap" />
@@ -7,4 +8,7 @@
         <rosparam file="$(find second_project)/base_local_planner_params.yaml" command="load" />
         <rosparam file="$(find second_project)/global_planner_params.yaml" command="load" />
     </node>
+
+    <node pkg="stage" type="stageros" name="stage" args="$(find second_project)/pathToWorldFile"/>
+
 </launch>
