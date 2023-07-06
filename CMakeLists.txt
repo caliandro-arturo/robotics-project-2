@@ -137,7 +137,6 @@ include_directories(
 set(NODES
   navigation
   tf_publisher
-  plan
   limits_finder
 )
 

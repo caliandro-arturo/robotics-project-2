@@ -1,88 +1,82 @@
 /**
- * Navigation
+ * Navigation node: sends goal and waits the robot to reach them.
  */
 
 #include <ros/ros.h>
-
+#include <ros/package.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
+#include <tf/tf.h>
 
 #include <fstream>
-#include <sstream>
 #include <vector>
-#include <string>
 
-#define CSV_PATH "waypoints.csv"
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
+#define CSV_PATH "/waypoints.csv"
 
-int main(int argc, char* argv[])
+move_base_msgs::MoveBaseGoal createGoal(std::string pose) {
+    std::istringstream iss(pose);
+    std::string current;
+    std::vector<double> doubleData;
+    while (std::getline(iss, current, ','))
+    {
+        try
+        {
+            double val = std::stod(current);
+            doubleData.push_back(val);
+        }
+        catch (const std::exception &e)
+        {
+            ROS_ERROR("Invalid data in CSV file: discarded");
+            continue;
+        }
+    }
+    if (doubleData.size() != 3)
+    {
+        ROS_ERROR("Invalid line in CSV file");
+    }
+    move_base_msgs::MoveBaseGoal goal;
+    goal.target_pose.header.frame_id = "base_link";
+    goal.target_pose.header.stamp = ros::Time::now();
+    goal.target_pose.pose.position.x = doubleData[0];
+    goal.target_pose.pose.position.y = doubleData[1];
+    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(doubleData[2]);
+    return goal;
+}
+
+int main(int argc, char *argv[])
 {
     ros::init(argc, argv, "navigation");
     ros::NodeHandle nh;
+    MoveBaseClient ac("move_base", true);
 
-    //MOVEBASE
-    MoveBaseClient mb("move_base", true);
-    mb.waitForServer();
-
-    //CSV READER
-    std::string csv = CSV_PATH;
-    std::ifstream file(csv);
-
+    // Wait for the action server to come up
+    while (!ac.waitForServer(ros::Duration(5.0)))
+    {
+        ROS_INFO("Waiting for the move_base action server to come up");
+    }
+    
+    // Open the csv file with waypoints
+    std::string csv_path = ros::package::getPath("second_project") + CSV_PATH;
+    std::ifstream file(csv_path);
     if (!file.is_open())
     {
-        ROS_ERROR("Error in file opening");
-        return;
+        ROS_ERROR("Cannot open %s.", csv_path.c_str());
+        return 1;
     }
-
+    
     std::string line;
+    int count = 1;
     while (std::getline(file, line) && ros::ok())
     {
-        std::istringstream iss(line);
-        std::string current;
-        std::vector<double> doubleData;
-
-        while (std::getline(iss, current, ','))
-        {
-            try
-            {
-                double val = std::stod(current);
-                doubleData.push_back(val);
-            }
-            catch (const std::exception& e)
-            {
-                ROS_ERROR("Invalid data in CSV file: %s", e.what());
-            }
-        }
-        if (doubleData.size() != 3)
-        {
-            ROS_ERROR("Invalid line in CSV file");
-            continue;
-        }
-
-        move_base_msgs::MoveBaseGoal goal;
-
-        goal.target_pose.header.frame_id = "map";
-
-        goal.target_pose.pose.position.x = doubleData[0];
-        goal.target_pose.pose.position.y = doubleData[1];
-        goal.target_pose.pose.orientation.z = doubleData[2];
-
-        mb.sendGoal(goal);
-        mb.waitForResult();
-
-        if (mb.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-        {
-            ROS_INFO("Goal reached");
-        }
-        else
-        {
-            ROS_WARN("Fail");
-        }
-
-        ros::spinOnce();
-
+        ROS_INFO("Sending goal #%d...", count);
+        ac.sendGoal(createGoal(line));
+        ac.waitForResult();
+        actionlib::SimpleClientGoalState result = ac.getState();
+        ROS_INFO("Goal #%d: %s.", count, result.getText().c_str());
+        count++;
     }
 
-    file.close();
-
+    return 0;
 }
