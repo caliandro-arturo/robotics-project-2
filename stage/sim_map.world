@@ -31,14 +31,14 @@ floorplan
 (
   name "sim_map"
   bitmap "sim_map.pgm"
-  size [ 18.0 27.0 2.0 ]
-  pose [ 9.0 13.5 0.0 0.0 ]
+  size [ 27.0 18.0 1.0 ]
+  pose [ 9.5 0.0 0.0 0.0 ]
 )
 
 # throw in a robot
 skidbot
 (
-  pose [ 9.0 4.0 0.0 90.0 ]
+  pose [ 0.0 0.0 0.0 0.0 ]
   name "skidbot"
   color "black"
 )
