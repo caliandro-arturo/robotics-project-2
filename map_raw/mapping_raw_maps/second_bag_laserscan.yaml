@@ -1,4 +1,4 @@
-image: map.pgm
+image: second_bag_laserscan.pgm
 resolution: 0.040000
 origin: [-8.954455, -8.368285, 0.000000]
 negate: 0

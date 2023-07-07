@@ -1,4 +1,4 @@
-image: map.pgm
+image: second_bag_velodyne.pgm
 resolution: 0.040000
 origin: [-13.900454, -21.342098, 0.000000]
 negate: 0
