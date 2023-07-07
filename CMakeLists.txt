@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   nav_msgs
   tf
+  move_base_msgs
+  actionlib
+  global_planner
 )
 
 ## System dependencies are found with CMake's conventions
@@ -134,6 +137,7 @@ include_directories(
 set(NODES
   navigation
   tf_publisher
+  limits_finder
 )
 
 # Automation to add the executables
