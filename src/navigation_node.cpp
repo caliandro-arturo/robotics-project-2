@@ -81,11 +81,14 @@ int main(int argc, char *argv[])
             ROS_ERROR("Error during the creation of a goal: %s", e.what());
         }
         ROS_INFO("Sent goal #%d...", count);
+        ros::Duration(2.0).sleep();
         ac.waitForResult();
         actionlib::SimpleClientGoalState result = ac.getState();
         ROS_INFO("Goal #%d: %s.", count, result.getText().c_str());
+        if (result != actionlib::SimpleClientGoalState::SUCCEEDED)
+            return 1;
         count++;
+        ac.cancelAllGoals();
     }
-
     return 0;
 }
