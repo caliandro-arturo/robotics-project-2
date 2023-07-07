@@ -24,7 +24,6 @@
     <rosparam file="$(find second_project)/cfg/costmap_common_params.yaml" command="load" ns="local_costmap" />   
     <rosparam file="$(find second_project)/cfg/local_costmap_params.yaml" command="load" />   
     <rosparam file="$(find second_project)/cfg/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find second_project)/cfg/dwa_local_planner_params.yaml" command="load" />
     <rosparam file="$(find second_project)/cfg/move_base_params.yaml" command="load" /> 
 
     <param name="base_global_planner" value="global_planner/GlobalPlanner" />  <!--   planner  navfn/NavfnROS alternative  carrot_planner/CarrotPlanner -->
