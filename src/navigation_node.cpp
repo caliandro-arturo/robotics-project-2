@@ -10,6 +10,7 @@
 
 #include <fstream>
 #include <vector>
+#include <stdexcept>
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
@@ -19,25 +20,17 @@ move_base_msgs::MoveBaseGoal createGoal(std::string pose) {
     std::istringstream iss(pose);
     std::string current;
     std::vector<double> doubleData;
+    move_base_msgs::MoveBaseGoal goal;
     while (std::getline(iss, current, ','))
     {
-        try
-        {
-            double val = std::stod(current);
-            doubleData.push_back(val);
-        }
-        catch (const std::exception &e)
-        {
-            ROS_ERROR("Invalid data in CSV file: discarded");
-            continue;
-        }
+        double val = std::stod(current);
+        doubleData.push_back(val);
     }
     if (doubleData.size() != 3)
     {
-        ROS_ERROR("Invalid line in CSV file");
+        throw std::runtime_error("Expected 3 values, received " + std::to_string(doubleData.size()));
     }
-    move_base_msgs::MoveBaseGoal goal;
-    goal.target_pose.header.frame_id = "base_link";
+    goal.target_pose.header.frame_id = "map";
     goal.target_pose.header.stamp = ros::Time::now();
     goal.target_pose.pose.position.x = doubleData[0];
     goal.target_pose.pose.position.y = doubleData[1];
@@ -70,8 +63,24 @@ int main(int argc, char *argv[])
     int count = 1;
     while (std::getline(file, line) && ros::ok())
     {
-        ROS_INFO("Sending goal #%d...", count);
-        ac.sendGoal(createGoal(line));
+        try
+        {
+            ac.sendGoal(createGoal(line));
+        }
+        catch (std::invalid_argument &e)
+        {
+            if (count > 1)
+            {
+                ROS_ERROR("Error in goal #%d: format not valid.", count);
+                count++;
+            }
+            continue;
+        }
+        catch (std::exception &e)
+        {
+            ROS_ERROR("Error during the creation of a goal: %s", e.what());
+        }
+        ROS_INFO("Sent goal #%d...", count);
         ac.waitForResult();
         actionlib::SimpleClientGoalState result = ac.getState();
         ROS_INFO("Goal #%d: %s.", count, result.getText().c_str());
