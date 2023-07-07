@@ -31,11 +31,14 @@ TebLocalPlannerROS:
     vertices: [[0.3, 0.2], [-0.3, 0.2], [-0.3, -0.2], [0.3, -0.2]]  # replace these with your robot's dimensions
 
   # Obstace avoidance
-  min_obstacle_dist: 0.1  # this is the minimum distance from obstacles, change it as needed.
+  min_obstacle_dist: 0.05  # this is the minimum distance from obstacles, change it as needed.
   include_costmap_obstacles: True
   costmap_obstacles_behind_robot_dist: 1.0
   obstacle_poses_affected: 30
   costmap_converter_plugin: ""
   costmap_converter_spin_thread: True
   costmap_converter_rate: 5
+
+  allow_init_with_backwards_motion: True
+  weight_kinematics_forward_drive: 2.0
 
