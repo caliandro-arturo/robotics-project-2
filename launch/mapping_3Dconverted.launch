@@ -17,11 +17,11 @@
         <param name="target_frame" value="base_link"/>
         <param name="transform_tolerance" value="0.01"/>
         <param name="angle_increment" value="0.00139657375"/> <!--value="0.0013962631"    0.00139657375    -->
-        <param name="min_height" value="0.0"/>
-        <param name="max_height" value="2.0"/>
+        <param name="min_height" value="0.02"/>
+        <param name="max_height" value="0.75"/>
         <param name="scan_time" value="0.0"/>
         <param name="range_min" value="0.15000000596046448"/>
-        <param name="range_max" value="10.0"/>
+        <param name="range_max" value="101.0"/>
         <param name="use_inf" value="false"/>
         <param name="concurrency_level" value="1"/>
     </node>
