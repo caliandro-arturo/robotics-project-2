@@ -16,7 +16,7 @@ define floorplan model
   laser_return 1
 )
 
-resolution 0.05
+resolution 0.04
 interval_sim 100  # simulation timestep in milliseconds
 
 window
@@ -31,8 +31,8 @@ floorplan
 (
   name "sim_map"
   bitmap "sim_map.pgm"
-  size [ 27.0 18.0 1.0 ]
-  pose [ 9.5 0.0 0.0 0.0 ]
+  size [ 35.04 18.4 1.0 ]
+  pose [ 9.52 0.4 0.0 0.0 ]
 )
 
 # throw in a robot
